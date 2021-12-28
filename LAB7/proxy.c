@@ -152,11 +152,23 @@ void parse(char *uri, char *hostname, char *port, char *path){
 
 //Refer to the Lecture16 PPT code related to sprintf.
 void getheader(rio_t client, char *hostname, char *path, char *header){
-    sprintf(header,"GET %s HTTP/1.0\r\n",path);
-    sprintf(header,"%sHost: %s\r\n",header,hostname);
-    sprintf(header,"%sUser-Agent: %s",header,user_agent_hdr);
-    sprintf(header,"%sConnection: close\r\n",header);
-    sprintf(header,"%sProxy-Connection: close\r\n",header);
+    char cache[MAXLINE];
+    strcpy(cache, header);
+
+    sprintf(cache,"GET %s HTTP/1.0\r\n",path);
+    strcpy(header, cache);
+
+    sprintf(cache,"%sHost: %s\r\n",header,hostname);
+    strcpy(header, cache);
+
+    sprintf(cache,"%sUser-Agent: %s",header,user_agent_hdr);
+    strcpy(header, cache);
+
+    sprintf(cache,"%sConnection: close\r\n",header);
+    strcpy(header, cache);
+
+    sprintf(cache,"%sProxy-Connection: close\r\n",header);
+    strcpy(header, cache);
 
     //find additional header
     char buf[MAXLINE];
@@ -167,9 +179,13 @@ void getheader(rio_t client, char *hostname, char *path, char *header){
         else if(0==strncmp(buf, "User-Agent", strlen("User-Agent"))) continue;
         else if(0==strncmp(buf, "Connection", strlen("Connection"))) continue;
         else if(0==strncmp(buf, "Proxy-Connection", strlen("Proxy-Connection"))) continue;
-        else  sprintf(header,"%s%s",header,buf);
+        else {
+            sprintf(cache,"%s%s",header,buf);
+            strcpy(header, cache);
+        }
     }
 
     //end of HTTP request
-    sprintf(header,"%s\r\n",header);
+    sprintf(cache,"%s\r\n",header);
+    strcpy(header, cache);
 }
