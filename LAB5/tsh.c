@@ -1,6 +1,3 @@
-/* 
- * tsh - A tiny shell program with job control
- */
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
